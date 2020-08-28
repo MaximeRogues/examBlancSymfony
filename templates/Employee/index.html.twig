@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello EmployeeController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <a href="{{ path('app_logout') }}"><button class="btn btn-danger">Déconnexion</button></a>
+    <br> <br>
+    {% if "ROLE_ADMIN" in app.user.roles   %}
+
+    <a href="{{path('addEmployee') }}" class="btn btn-success">Ajouter un employé</a>
+    <br><br>
+    {% endif %}
+
+    <h2>Tous les employés de Deloitte SARL</h2>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <td><u><b> Nom</b></u></td>
+                <td><u><b>Prénom</b></u></td>
+                <td><u><b>Secteur</b></u></td>
+                <td><u><b>Email</b></u></td>
+                <td><u><b>Photo</b></u></td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+                {% if "ROLE_ADMIN" not in employee.roles %}
+                <tr style="background-color: {{employee.sector.color}} ;">
+                    <td>{{employee.lastName}}</td>
+                    <td>{{employee.firstName}}</td>
+                    <td>{{employee.sector.name}}</td>
+                    <td>{{employee.email}}</td>
+                    {# TODO mettre une image avec le chemin {{asset(images/ ~ employee.picture)}} #}
+                    <td><img src="{{asset('images/' ~ employee.picture )}}" alt="Photo de l'employé" style="width: 6rem; height: 8rem"></td>
+                    {% if "ROLE_ADMIN" in app.user.roles   %}
+                        <td><a href="{{path('deleteEmployee', {'id': employee.id})}}" class="btn btn-danger">Virer cet employé</a></td>
+                    {% endif %}
+                </tr>
+                {% endif %}
+            {% endfor %}
+            
+        </tbody>
+    </table>
+   
+</div>
+{% endblock %}
