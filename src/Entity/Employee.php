@@ -5,6 +5,9 @@ namespace App\Entity;
 use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 /**
  * @ORM\Entity(repositoryClass=EmployeeRepository::class)
@@ -20,6 +23,13 @@ class Employee implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Email(
+     *    message = "The email '{{ value }}' is not a valid email."
+     * )
+     * @Assert\Regex(
+     *  pattern = "/\S+@deloitte\.com$/",
+     *  message = "L'email doit finir par '@deloitte.com'"
+     * )
      */
     private $email;
 
@@ -62,6 +72,7 @@ class Employee implements UserInterface
 
     public function __construct() {
         $this->redefinedPassword = false;
+        $this->password = "Severus";
     }
 
     public function getId(): ?int
